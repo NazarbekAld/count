@@ -41,14 +41,7 @@ fun Application.configureRouting() {
 //            call.respondText("Hello World!")
 //        }
         // Static plugin. Try to access `/static/index.html`
-        staticResources("/", "/dist") {
-
-            contentType {
-                if (it.file.split(".")[0] == "js")
-                    return@contentType ContentType.Text.JavaScript
-                return@contentType ContentType.defaultForFilePath(it.path)
-            }
-        }
+        staticResources("/", "/dist")
 
         webSocket("count_flow") {
             send(Json.encodeToString(latest))
