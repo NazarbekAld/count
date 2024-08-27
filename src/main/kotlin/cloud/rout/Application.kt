@@ -11,9 +11,9 @@ fun main() {
 }
 
 fun Application.module() {
-    configureSecurity()
+//    configureSecurity()
     configureHTTP()
     configureSerialization()
-    configureTemplating()
+//    configureTemplating()
     configureRouting()
 }
