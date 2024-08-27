@@ -4,6 +4,9 @@ val kotlinx_html_version: String by project
 
 plugins {
     kotlin("jvm") version "2.0.20"
+
+    id("com.gradleup.shadow") version "8.3.0"
+
     id("io.ktor.plugin") version "2.3.12"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
 }
@@ -21,6 +24,15 @@ application {
 repositories {
     mavenCentral()
     maven { url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers") }
+}
+
+
+tasks.jar {
+    enabled = false
+}
+
+tasks.build {
+    dependsOn(tasks.shadowJar)
 }
 
 dependencies {
