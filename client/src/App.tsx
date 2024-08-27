@@ -8,7 +8,7 @@ function App() {
     const [count, setCount] = useState(0);
     const [el, setEl] = useState(<Typography variant={"h4"}>Waiting for server...</Typography>);
     useEffect(() => {
-        const websocket = new WebSocket(`ws://${location.hostname}:8080/count_flow`);
+        const websocket = new WebSocket(`wss://${location.hostname}:8080/count_flow`);
         websocket.onopen = () => {
             websocket.addEventListener("message", (e) => {
                 const dat = JSON.parse(e.data);
