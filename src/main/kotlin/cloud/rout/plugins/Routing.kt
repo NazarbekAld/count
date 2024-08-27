@@ -21,6 +21,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.net.URL
 import java.time.Duration
 
 var latest = CountData(0)
@@ -40,7 +41,14 @@ fun Application.configureRouting() {
 //            call.respondText("Hello World!")
 //        }
         // Static plugin. Try to access `/static/index.html`
-        staticResources("/", "/dist")
+        staticResources("/", "/dist") {
+
+            contentType {
+                if (it.file.split(".")[0] == "js")
+                    return@contentType ContentType.Text.JavaScript
+                return@contentType ContentType.defaultForFilePath(it.path)
+            }
+        }
 
         webSocket("count_flow") {
             send(Json.encodeToString(latest))
