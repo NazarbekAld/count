@@ -25,8 +25,7 @@ import java.net.URL
 import java.time.Duration
 
 var latest = CountData(0)
-val messageResponseFlow = MutableSharedFlow<CountData>()
-val sharedFlow = messageResponseFlow.asSharedFlow()
+
 
 fun Application.configureRouting() {
     install(Webjars) {
@@ -34,46 +33,11 @@ fun Application.configureRouting() {
     }
     install(WebSockets) {
         pingPeriod = Duration.ofSeconds(15)
+        masking = true
+
     }
 
     routing {
-//        get("/") {
-//            call.respondText("Hello World!")
-//        }
-        // Static plugin. Try to access `/static/index.html`
         staticResources("/", "/dist")
-
-        webSocket("count_flow") {
-            send(Json.encodeToString(latest))
-
-            val job = launch {
-                sharedFlow.collect {
-                    send(Json.encodeToString(it))
-                }
-            }
-
-            runCatching {
-                incoming.consumeEach { frame ->
-                    if (frame is Frame.Text) {
-                        val message = frame.readText()
-                        val op = Json.decodeFromString<CountPost>(message)
-                        if (op.op == "add") {
-                            latest++
-                            messageResponseFlow.emit(latest)
-                        }
-                    }
-                }
-            }.onFailure { exception ->
-                println("WebSocket exception: ${exception.localizedMessage}")
-            }.also {
-                job.cancel()
-            }
-
-        }
-
-
-//        get("/webjars") {
-//            call.respondText("<script src='/webjars/jquery/jquery.js'></script>", ContentType.Text.Html)
-//        }
     }
 }

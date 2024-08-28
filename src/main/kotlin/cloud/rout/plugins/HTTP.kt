@@ -32,6 +32,8 @@ fun Application.configureHTTP() {
         allowMethod(HttpMethod.Post)
         anyHost()
     }
+
+
     install(HSTS) {
         includeSubDomains = true
     }
